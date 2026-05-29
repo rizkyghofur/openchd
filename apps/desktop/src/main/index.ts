@@ -3,7 +3,7 @@
 
 import { ProcessManager } from "@openchd/process";
 import { ConversionOptions, QueueItem } from "@openchd/shared";
-import { app, BrowserWindow, ipcMain, dialog, shell } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, shell, Menu } from "electron";
 import { join } from "path";
 
 const processManager = new ProcessManager();
@@ -119,9 +119,114 @@ function setupIPC(): void {
   });
 }
 
+function setupMenu(): void {
+  const isMac = process.platform === "darwin";
+  const template: Electron.MenuItemConstructorOptions[] = [
+    ...(isMac
+      ? [
+          {
+            label: "OpenCHD",
+            submenu: [
+              {
+                label: "About OpenCHD",
+                click: () => {
+                  dialog.showMessageBox(mainWindow!, {
+                    type: "info",
+                    title: "About OpenCHD",
+                    message: "OpenCHD v1.0.0",
+                    detail: "A high-performance modern desktop GUI for chdman.\n\nBatch compress retro gaming disc images into CHD format and extract them back seamlessly.\n\nCompatibility: MAME, RetroArch, DuckStation, PCSX2, Flycast\nEngine: chdman v0.260+\n\nCopyright \u00a9 2026 OpenCHD Contributors. MIT License.",
+                    icon: join(__dirname, "app_icon.png"),
+                  });
+                },
+              },
+              { type: "separator" as const },
+              { role: "services" as const },
+              { type: "separator" as const },
+              { role: "hide" as const },
+              { role: "hideOthers" as const },
+              { role: "unhide" as const },
+              { type: "separator" as const },
+              { role: "quit" as const },
+            ],
+          },
+        ]
+      : []),
+    {
+      label: "File",
+      submenu: [isMac ? { role: "close" as const } : { role: "quit" as const }],
+    },
+    {
+      label: "Edit",
+      submenu: [
+        { role: "undo" as const },
+        { role: "redo" as const },
+        { type: "separator" as const },
+        { role: "cut" as const },
+        { role: "copy" as const },
+        { role: "paste" as const },
+        { role: "selectAll" as const },
+      ],
+    },
+    {
+      label: "View",
+      submenu: [
+        { role: "reload" as const },
+        { role: "forceReload" as const },
+        { role: "toggleDevTools" as const },
+        { type: "separator" as const },
+        { role: "resetZoom" as const },
+        { role: "zoomIn" as const },
+        { role: "zoomOut" as const },
+        { type: "separator" as const },
+        { role: "togglefullscreen" as const },
+      ],
+    },
+    {
+      label: "Window",
+      submenu: [
+        { role: "minimize" as const },
+        { role: "zoom" as const },
+        ...(isMac
+          ? [
+              { type: "separator" as const },
+              { role: "front" as const },
+              { type: "separator" as const },
+              { role: "window" as const },
+            ]
+          : [{ role: "close" as const }]),
+      ],
+    },
+    ...(!isMac
+      ? [
+          {
+            label: "Help",
+            submenu: [
+              {
+                label: "About OpenCHD",
+                click: () => {
+                  dialog.showMessageBox(mainWindow!, {
+                    type: "info",
+                    title: "About OpenCHD",
+                    message: "OpenCHD v1.0.0",
+                    detail: "A high-performance modern desktop GUI for chdman.\n\nBatch compress retro gaming disc images into CHD format and extract them back seamlessly.\n\nCompatibility: MAME, RetroArch, DuckStation, PCSX2, Flycast\nEngine: chdman v0.260+\n\nCopyright \u00a9 2026 OpenCHD Contributors. MIT License.",
+                    icon: join(__dirname, "app_icon.png"),
+                  });
+                },
+              },
+            ],
+          },
+        ]
+      : []),
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
 app.whenReady().then(() => {
   setupIPC();
   createWindow();
+  setupMenu();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
