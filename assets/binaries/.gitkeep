@@ -1,0 +1,28 @@
+# Platform-specific chdman binaries
+
+This directory contains platform-specific chdman binaries bundled with the application.
+
+## Directory Structure
+
+```
+binaries/
+├── windows/    # chdman.exe for Windows
+├── linux/      # chdman for Linux
+└── macos/      # chdman for macOS
+```
+
+## Bundled Binaries
+
+The correct binary is selected automatically based on the host OS detection.
+
+### Sources
+
+- Windows: MAME tools (chdman.exe)
+- macOS: MAME tools (chdman)
+- Linux: MAME tools (chdman)
+
+### Notes
+
+- All binaries should be verified against official MAME releases
+- Binaries are loaded from this directory at runtime
+- The application will fall back to system PATH if bundled binaries are not found

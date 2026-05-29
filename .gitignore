@@ -1,0 +1,14 @@
+node_modules/
+dist/
+out/
+.turbo/
+.vite/
+.DS_Store
+*.log
+*.tgz
+.env
+.env.local
+.env.*.local
+.AGENTS.md
+.RULES.md
+.agents/

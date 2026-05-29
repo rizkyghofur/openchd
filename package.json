@@ -1,0 +1,34 @@
+{
+  "name": "openchd",
+  "version": "1.0.0",
+  "description": "A modern cross-platform GUI frontend for chdman",
+  "private": true,
+  "author": "OpenCHD Team",
+  "license": "MIT",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "pnpm --filter @openchd/desktop start",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.2.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@emmercm/chdman-darwin-arm64": "^0.288.1",
+    "@emmercm/chdman-darwin-x64": "^0.288.1",
+    "@emmercm/chdman-linux-x64": "^0.288.1",
+    "@emmercm/chdman-win32-x64": "^0.288.1",
+    "chdman": "^0.288.1",
+    "pnpm": "^11.4.0"
+  }
+}
