@@ -12,3 +12,4 @@ out/
 .AGENTS.md
 .RULES.md
 .agents/
+.npm-cache/
