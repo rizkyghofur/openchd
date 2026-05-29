@@ -104,6 +104,12 @@ Follow these steps to set up, build, and run the development environment on your
    npm start
    ```
 
+5. **Package into Native Installers (Production)**:
+   Compile the workspaces and bundle the desktop application into platform-specific installers (e.g. `.dmg` for macOS, `.exe` for Windows, or `.AppImage` for Linux) inside the `apps/desktop/out/` directory:
+   ```bash
+   ./node_modules/.bin/pnpm package
+   ```
+
 ---
 
 ## 💡 How to Use OpenCHD

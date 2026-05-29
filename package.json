@@ -10,6 +10,7 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "start": "pnpm --filter @openchd/desktop start",
+    "package": "turbo run build && pnpm --filter @openchd/desktop package",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck"
   },
