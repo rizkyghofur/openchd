@@ -9,7 +9,7 @@ import {
 } from "@openchd/shared";
 import { ChildProcess, spawn } from "child_process";
 import { EventEmitter } from "events";
-import { existsSync, readFileSync, writeFileSync, readdirSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, readdirSync, chmodSync } from "fs";
 import { join, dirname } from "path";
 
 interface RunningJob {
@@ -56,6 +56,18 @@ export class ProcessManager extends EventEmitter {
     const binaryName = os === "windows" ? "chdman.exe" : "chdman";
     const osFolder = os === "windows" ? "windows" : os === "macos" ? "macos" : "linux";
 
+    // Helper to apply chmod +x on non-windows platforms
+    const makeExecutable = (filePath: string): string => {
+      if (os !== "windows" && existsSync(filePath)) {
+        try {
+          chmodSync(filePath, 0o755);
+        } catch (e) {
+          // Ignored
+        }
+      }
+      return filePath;
+    };
+
     // 1. Cek lokasi di Development Mode / Node Modules (di-download otomatis lewat package @emmercm/chdman)
     const npmPlatform = os === "macos" ? "darwin" : os === "windows" ? "win32" : "linux";
     const npmArch = arch === "arm64" ? "arm64" : "x64";
@@ -64,26 +76,34 @@ export class ProcessManager extends EventEmitter {
     // Cek di folder node_modules workspace root
     const nodeModulesPath = join(__dirname, "../../../node_modules", packageName, "dist", binaryName);
     if (existsSync(nodeModulesPath)) {
-      return nodeModulesPath;
+      return makeExecutable(nodeModulesPath);
     }
 
     // Cek di folder node_modules package internal
     const internalNodeModulesPath = join(__dirname, "../node_modules", packageName, "dist", binaryName);
     if (existsSync(internalNodeModulesPath)) {
-      return internalNodeModulesPath;
+      return makeExecutable(internalNodeModulesPath);
     }
 
     // 2. Cek lokasi di Development Mode lokal (/assets/binaries)
     const devPath = join(__dirname, "../../../assets/binaries", osFolder, binaryName);
     if (existsSync(devPath)) {
-      return devPath;
+      return makeExecutable(devPath);
     }
 
     // 3. Cek lokasi di Production Mode (didistribusikan bersama berkas resources Electron app)
     if (process.resourcesPath) {
+      // Cek dengan format subfolder spesifik platform-arch yang kita package via extraResources
+      const prodArchFolder = `${osFolder}-${arch}`;
+      const prodPathWithArch = join(process.resourcesPath, "assets/binaries", prodArchFolder, binaryName);
+      if (existsSync(prodPathWithArch)) {
+        return makeExecutable(prodPathWithArch);
+      }
+
+      // Fallback ke format lama tanpa arch
       const prodPath = join(process.resourcesPath, "assets/binaries", osFolder, binaryName);
       if (existsSync(prodPath)) {
-        return prodPath;
+        return makeExecutable(prodPath);
       }
     }
 

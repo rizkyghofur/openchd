@@ -42,6 +42,40 @@
       "package.json"
     ],
     "asar": true,
+    "extraResources": [
+      {
+        "from": "../../node_modules/@emmercm/chdman-darwin-arm64/dist",
+        "to": "assets/binaries/macos-arm64",
+        "filter": [
+          "chdman",
+          "*.dylib"
+        ]
+      },
+      {
+        "from": "../../node_modules/@emmercm/chdman-darwin-x64/dist",
+        "to": "assets/binaries/macos-x64",
+        "filter": [
+          "chdman",
+          "*.dylib"
+        ]
+      },
+      {
+        "from": "../../node_modules/@emmercm/chdman-linux-x64/dist",
+        "to": "assets/binaries/linux-x64",
+        "filter": [
+          "chdman",
+          "*.so*"
+        ]
+      },
+      {
+        "from": "../../node_modules/@emmercm/chdman-win32-x64/dist",
+        "to": "assets/binaries/windows-x64",
+        "filter": [
+          "chdman.exe",
+          "*.dll"
+        ]
+      }
+    ],
     "mac": {
       "target": "dmg",
       "icon": "src/main/app_icon.png"
